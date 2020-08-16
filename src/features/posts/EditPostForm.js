@@ -12,22 +12,31 @@ const EditPostForm = ({ match }) => {
     return state.posts.find((post) => post.id === postId)
   })
 
+  const users = useSelector((state) => state.users)
+
   const [title, setTitle] = useState(post.title)
   const [content, setContent] = useState(post.content)
+  const [author, setAuthor] = useState(post.user)
 
   const history = useHistory()
   const dispatch = useDispatch()
 
   const onTitleChange = (e) => setTitle(e.target.value)
   const onContentChange = (e) => setContent(e.target.value)
+  const onAuthorChanged = (e) => setAuthor(e.target.value)
 
   const onSavePostClicked = () => {
-    debugger
-    if (title && content) {
-      dispatch(postUpdated({ id: postId, title, content }))
+    if (title && content && author) {
+      dispatch(postUpdated({ id: postId, title, content, user: author }))
       history.push(`/posts/${postId}`)
     }
   }
+
+  const userOptions = users.map((user) => (
+    <option key={user.id} value={user.id}>
+      {user.name}
+    </option>
+  ))
 
   return (
     <section>
@@ -49,6 +58,10 @@ const EditPostForm = ({ match }) => {
           value={content}
           onChange={onContentChange}
         ></input>
+        <label htmlFor="postAuthor">Post Author:</label>
+        <select id="postAuthor" value={author} onChange={onAuthorChanged}>
+          {userOptions}
+        </select>
       </form>
       <button type="button" onClick={onSavePostClicked}>
         Save Post

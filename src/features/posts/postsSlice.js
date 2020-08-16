@@ -4,8 +4,8 @@ import { createSlice, nanoid } from '@reduxjs/toolkit'
 const postsSlice = createSlice({
   name: 'posts',
   initialState: [
-    { id: '1', title: 'First Post!', content: 'Hello!' },
-    { id: '2', title: 'Second Post!', content: 'More text' },
+    { id: '1', title: 'First Post!', content: 'Hello!', user: '' },
+    { id: '2', title: 'Second Post!', content: 'More text', user: '' },
   ],
   reducers: {
     //2 ways to write reducer
@@ -21,24 +21,23 @@ const postsSlice = createSlice({
         state.push(action.payload)
       },
       prepare(title, content, userId) {
-        debugger
         return {
           payload: {
             id: nanoid(),
             title,
             content,
-            userId,
+            user: userId,
           },
         }
       },
     },
     postUpdated(state, action) {
-      debugger
-      const { id, title, content } = action.payload
+      const { id, title, content, user } = action.payload
       const existingPost = state.find((post) => post.id === id)
       if (existingPost) {
         existingPost.title = title
         existingPost.content = content
+        existingPost.user = user
       }
     },
   },
