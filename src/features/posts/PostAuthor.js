@@ -6,7 +6,7 @@ const PostAuthor = ({ userId }) => {
     state.users.find((user) => user.id === userId)
   )
   console.log('author', author)
-  return <div>by {author ? author.name : 'unknown author'}</div>
+  return <span>by {author ? author.name : 'unknown author'}</span>
 }
 
 export default PostAuthor

@@ -1,12 +1,40 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { sub } from 'date-fns'
 // import { nanoid } from '@reduxjs/toolkit'
+const initialState = [
+  {
+    id: '1',
+    title: 'First Post!',
+    content: 'Hello!',
+    user: '0',
+    date: sub(new Date(), { minutes: 10 }).toISOString(),
+    reactions: {
+      thumbsUp: 0,
+      hooray: 0,
+      heart: 0,
+      rocket: 0,
+      eyes: 0,
+    },
+  },
+  {
+    id: '2',
+    title: 'Second Post!',
+    content: 'More text',
+    user: '1',
+    date: sub(new Date(), { minutes: 10 }).toISOString(),
+    reactions: {
+      thumbsUp: 0,
+      hooray: 0,
+      heart: 0,
+      rocket: 0,
+      eyes: 0,
+    },
+  },
+]
 
 const postsSlice = createSlice({
   name: 'posts',
-  initialState: [
-    { id: '1', title: 'First Post!', content: 'Hello!', user: '' },
-    { id: '2', title: 'Second Post!', content: 'More text', user: '' },
-  ],
+  initialState,
   reducers: {
     //2 ways to write reducer
     //  postAdded: (state, action) => {
@@ -26,6 +54,9 @@ const postsSlice = createSlice({
             id: nanoid(),
             title,
             content,
+            date: new Date().toISOString(), //Redux actions and state should only contain
+            //plain JS values like objects, arrays, and primitives.
+            //Don't put class instances, functions, or other non-serializable values into Redux!.
             user: userId,
           },
         }
@@ -40,9 +71,17 @@ const postsSlice = createSlice({
         existingPost.user = user
       }
     },
+    reactionAdded(state, action) {
+      debugger
+      const { postId, reaction } = action.payload
+      const existingPost = state.find((post) => post.id === postId)
+      if (existingPost) {
+        existingPost.reactions[reaction]++
+      }
+    },
   },
 })
 
-export const { postAdded, postUpdated } = postsSlice.actions
+export const { postAdded, postUpdated, reactionAdded } = postsSlice.actions
 
 export default postsSlice.reducer
