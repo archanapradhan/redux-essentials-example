@@ -65,7 +65,8 @@ const notificationTemplates = [
 new Server({
   routes() {
     this.namespace = 'fakeApi'
-    //this.timing = 2000
+
+    this.timing = 2000 //uncomment this line to display the spinner
 
     this.resource('users')
     this.resource('posts')
