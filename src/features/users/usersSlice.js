@@ -15,13 +15,18 @@ const usersSlice = createSlice({
   reducers: {},
   extraReducers: {
     [fetchUsers.fulfilled]: (state, action) => {
-      debugger
       return action.payload
     },
   },
 })
 
 export default usersSlice.reducer
+
+export const selectAllUsers = (state) => state.users
+
+export const selectUserById = (state, userId) => {
+  state.users.find((user) => user.id === userId)
+}
 
 // function createSlice2(obj) {
 //   const keyname = obj.name
