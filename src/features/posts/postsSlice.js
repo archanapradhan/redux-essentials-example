@@ -1,4 +1,4 @@
-import { createSlice, nanoid, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { client } from '../../api/client'
 // import { sub } from 'date-fns'
 
@@ -9,11 +9,20 @@ const initialState = {
 }
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+  debugger
   const response = await client.get('/fakeApi/posts')
   return response.posts
 })
 
-console.log(fetchPosts.rejected())
+export const addNewPost = createAsyncThunk(
+  'posts/addNewPost',
+  async (initialPost) => {
+    const response = await client.post('fakeApi/posts', { post: initialPost })
+    return response.post
+  }
+)
+
+// console.log(fetchPosts.rejected())
 // const rejected = fetchPosts.rejected
 // console.log({
 //   [fetchPosts.rejected]: 1,
@@ -32,24 +41,6 @@ const postsSlice = createSlice({
     //    state.push(action.payload)
     //  },
 
-    postAdded: {
-      reducer(state, action) {
-        state.posts.push(action.payload)
-      },
-      prepare(title, content, userId) {
-        return {
-          payload: {
-            id: nanoid(),
-            title,
-            content,
-            date: new Date().toISOString(), //Redux actions and state should only contain
-            //plain JS values like objects, arrays, and primitives.
-            //Don't put class instances, functions, or other non-serializable values into Redux!.
-            user: userId,
-          },
-        }
-      },
-    },
     postUpdated(state, action) {
       const { id, title, content, user } = action.payload
       const existingPost = state.posts.find((post) => post.id === id)
@@ -74,9 +65,21 @@ const postsSlice = createSlice({
     },
     [fetchPosts.fulfilled]: (state, action) => {
       state.status = 'succeeded'
+      debugger
       state.posts = state.posts.concat(action.payload)
     },
     [fetchPosts.rejected]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+    },
+    [addNewPost.pending]: (state, action) => {
+      state.status = 'loading'
+    },
+    [addNewPost.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+      state.posts.push(action.payload)
+    },
+    [addNewPost.rejected]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
     },
