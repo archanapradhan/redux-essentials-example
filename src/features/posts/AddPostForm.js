@@ -27,7 +27,7 @@ const AddPostForm = () => {
           addNewPost({ title, content, user: userId })
         )
         unwrapResult(resultAction)
-        debugger
+
         setTitle('')
         setContent('')
         setUserID('')

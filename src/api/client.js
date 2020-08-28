@@ -3,7 +3,7 @@
 
 export async function client(endpoint, { body, ...customConfig } = {}) {
   const headers = { 'Content-Type': 'application/json' }
-  debugger
+
   const config = {
     method: body ? 'POST' : 'GET',
     ...customConfig,

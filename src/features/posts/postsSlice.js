@@ -9,7 +9,6 @@ const initialState = {
 }
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  debugger
   const response = await client.get('/fakeApi/posts')
   return response.posts
 })
@@ -51,7 +50,6 @@ const postsSlice = createSlice({
       }
     },
     reactionAdded(state, action) {
-      debugger
       const { postId, reaction } = action.payload
       const existingPost = state.posts.find((post) => post.id === postId)
       if (existingPost) {
@@ -65,7 +63,7 @@ const postsSlice = createSlice({
     },
     [fetchPosts.fulfilled]: (state, action) => {
       state.status = 'succeeded'
-      debugger
+
       state.posts = state.posts.concat(action.payload)
     },
     [fetchPosts.rejected]: (state, action) => {
